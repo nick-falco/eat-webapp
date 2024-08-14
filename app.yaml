@@ -4,5 +4,4 @@ entrypoint: react-scripts start
 
 handlers:
 - url: /.*
-  secure: always
   script: auto
