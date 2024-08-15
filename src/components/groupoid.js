@@ -1,41 +1,81 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Square, StaticSquare } from './square';
 
 
-export function Groupoid() {
+export function Groupoid({ size, setSize }) {
 
-    const squares = useState([Array(9).fill(null)]);
+    const maxSize = Math.pow(5, 2);
+    const [squares, setSquares] = useState(() => Array(maxSize).fill(""));
 
-    function handleChange(i) {
-        return
+    useEffect(() => {
+        // Clear the values of the squares array when the size variable changes
+        setSquares(Array(maxSize).fill(''));
+    }, [size, maxSize]);
+
+    const handleSetSquare = useCallback(
+        (value, squareNumber) => {
+            setSquares((squares) => {
+                const updatedSquares = [...squares];
+                updatedSquares[squareNumber] = value;
+                return updatedSquares;
+            });
+        },
+        []
+    );
+
+    const renderHeaderRow = (size) => {
+        const cells = [];
+        cells.push(<StaticSquare key={`top-header-cell-operator`} value="*" />);
+        for (let colIndex = 0; colIndex < size; colIndex++) {
+            cells.push(<StaticSquare key={`top-header-cell-${colIndex}`} value={colIndex} />);
+        }
+
+        return (
+            <div className="groupoid-row" key="header-row">
+                {cells}
+            </div>
+        );
+    };
+
+    const renderRow = (size, rowNumber) => {
+        const cells = [];
+        cells.push(<StaticSquare key={`left-header-cell-${rowNumber}`} value={rowNumber} />);
+        for (let colIndex = 0; colIndex < size; colIndex++) {
+            let squareNumber = rowNumber * size + colIndex;
+            cells.push(
+                <Square key={`cell-${squareNumber}`}
+                    value={squares[squareNumber]}
+                    squareNumber={squareNumber}
+                    setValue={handleSetSquare}
+                    size={size} />);
+        }
+
+        return (
+            <div key={`row-${rowNumber}`} className="groupoid-row">
+                {cells}
+            </div>
+        );
+    };
+
+    const rows = [];
+    rows.push(renderHeaderRow(size));
+    for (let rowIndex = 0; rowIndex < size; rowIndex++) {
+        rows.push(renderRow(size, rowIndex));
     }
 
     return (
-        <div className="menu-component">
-            <div className="groupoid-row">
-                <StaticSquare value="*" />
-                <StaticSquare value="0" />
-                <StaticSquare value="1" />
-                <StaticSquare value="2" />
+        <>
+            <div>
+                <label htmlFor="size-select">Size:</label>
+                <select id="size-select" onChange={(e) => setSize(e.target.value)}>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
             </div>
-            <div className="groupoid-row">
-                <StaticSquare value="0" />
-                <Square value={squares[0]} onSquareChange={() => handleChange(0)} />
-                <Square value={squares[1]} onSquareChange={() => handleChange(1)} />
-                <Square value={squares[2]} onSquareChange={() => handleChange(2)} />
+            <div>
+                {rows}
             </div>
-            <div className="groupoid-row">
-                <StaticSquare value="1" />
-                <Square value={squares[3]} onSquareChange={() => handleChange(3)} />
-                <Square value={squares[4]} onSquareChange={() => handleChange(4)} />
-                <Square value={squares[5]} onSquareChange={() => handleChange(5)} />
-            </div>
-            <div className="groupoid-row">
-                <StaticSquare value="2" />
-                <Square value={squares[6]} onSquareChange={() => handleChange(6)} />
-                <Square value={squares[7]} onSquareChange={() => handleChange(7)} />
-                <Square value={squares[8]} onSquareChange={() => handleChange(8)} />
-            </div>
-        </div>
+        </>
     );
 }

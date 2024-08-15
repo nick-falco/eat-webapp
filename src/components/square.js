@@ -1,11 +1,27 @@
-export function Square({ value, onSquareChange, className = '' }) {
+export function Square({ value, setValue, squareNumber, className = '', size=3 }) {
+
+    const onSquareKeyDown = (event) => {
+        const keyPressed = event.key;
+        // Check if the entered value is valid
+        if (!isNaN(parseInt(keyPressed)) && parseInt(keyPressed) < size) {
+            setValue(keyPressed, squareNumber);
+        } else if (keyPressed === 'Backspace' || keyPressed === 'Delete') {
+            // Allow deletion of invalid values using Backspace or Delete keys
+            setValue("", squareNumber);
+        } else {
+            event.preventDefault(); // Prevents the input of invalid values
+        }
+    };
+
+    const onSquareChange = (event) => {
+        onSquareKeyDown(event)
+    };
+
     return (
-        <input className={`square ${className}`} onChange={onSquareChange}>
+        <input type="text" className={`square ${className}`} value={value} onKeyDown={(e) => onSquareKeyDown(e)} onChange={(e) => onSquareChange(e)}>
         </input>
     );
-}
-
-
+};
 
 export function StaticSquare({ value, className = '' }) {
 
@@ -14,5 +30,4 @@ export function StaticSquare({ value, className = '' }) {
             {value}
         </div>
     );
-
-}
+};

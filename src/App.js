@@ -1,7 +1,9 @@
 import './App.css';
-import { Algorithm } from './components/algorithm';
-import { Groupoid } from './components/groupoid';
-import { TermOperation } from './components/termoperation';
+import { Menu } from './components/menu';
+
+function runAlgorithm() {
+  return
+}
 
 function app() {
   return (
@@ -12,23 +14,7 @@ function app() {
         </h1>
       </header>
       <div className="app-content">
-        <div className="app-menu-container">
-          <div className="app-menu">
-            <h4>Application Steps</h4>
-            <div className="panel">
-              <div className="panel-heading"><b>Step 1:</b> Select an Algorithm</div>
-              <div className="panel-body"><Algorithm></Algorithm></div>
-            </div>
-            <div className="panel">
-              <div className="panel-heading"><b>Step 2:</b> Define a Groupoid</div>
-              <div className="panel-body"><Groupoid></Groupoid></div>
-            </div>
-            <div className="panel">
-              <div className="panel-heading"><b>Step 3:</b> Select a Target Term Operation</div>
-              <div className="panel-body"><TermOperation></TermOperation></div>
-            </div>
-          </div>
-        </div>
+        <Menu />
         <div className="app-container">
           <h4>Overview</h4>
           <p>
@@ -43,7 +29,7 @@ function app() {
           </p>
           <h4>How to use this program</h4>
           <p>
-            To use the application, <b>follow the steps in the left-hand menu and click "Run Algorithm" when ready</b>.
+            To use the application, <b>fill out the form in the left-hand menu and click "Run Algorithm" when ready</b>.
             The algorithms output will appear in the panel below.
           </p>
           <p>
@@ -53,7 +39,7 @@ function app() {
             algorithm on your local computer.
           </p>
           <p>
-            <button className="btn btn-primary">Run Algorithm</button>
+            <button className="btn btn-primary" onClick={runAlgorithm()}>Run Algorithm</button>
           </p>
           <div className="panel">
             <div className="panel-heading">Algorithm Output</div>
