@@ -2,10 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Square, StaticSquare } from './square';
 
 
-export function Groupoid({ size, setSize }) {
-
-    const maxSize = Math.pow(5, 2);
-    const [squares, setSquares] = useState(() => Array(maxSize).fill(""));
+export function Groupoid({ size, setSize, maxSize, squares, setSquares}) {
 
     useEffect(() => {
         // Clear the values of the squares array when the size variable changes
