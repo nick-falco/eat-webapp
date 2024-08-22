@@ -1,10 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu } from './menu';
 
 
 export function Main() {
 
-    const [output, setOutput] = useState(3);
+    const [output, setOutput] = useState();
+
+    useEffect(() => {
+        const handleResize = () => {
+          const appContainer = document.querySelector('.app-container');
+          if (appContainer) {
+            appContainer.scrollTo(0, appContainer.scrollHeight);
+          }
+        };
+    
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+    
+        // Call handleResize immediately in case the element needs to be scrolled initially
+        handleResize();
+    
+        // Cleanup function
+        return () => window.removeEventListener('resize', handleResize);
+      }, [output]); // Empty dependency array means this effect runs once on mount and cleanup on unmount
 
     return (
         <div className="app">
@@ -35,11 +53,8 @@ export function Main() {
                     </p>
                     <div className="panel">
                         <div className="panel-heading">Algorithm Output</div>
-                        <div className="panel-body">
-                            <div className="output">
-                                Term: {output.term} <br/>
-                                Search Time: {output.search_time} seconds
-                            </div>
+                        <div className="panel-body output">
+                            {output}
                         </div>
                     </div>
                 </div>
