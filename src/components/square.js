@@ -8,6 +8,8 @@ export function Square({ value, setValue, squareNumber, className = '', size=3 }
         } else if (keyPressed === 'Backspace' || keyPressed === 'Delete') {
             // Allow deletion of invalid values using Backspace or Delete keys
             setValue("", squareNumber);
+        } else if (keyPressed === 'Tab') {
+            // do nothing since we just want to move to the next square
         } else {
             event.preventDefault(); // Prevents the input of invalid values
         }

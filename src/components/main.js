@@ -5,6 +5,8 @@ import { Menu } from './menu';
 export function Main() {
 
     const [output, setOutput] = useState();
+    const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -32,29 +34,27 @@ export function Main() {
                 </h1>
             </header>
             <div className="app-content">
-                <Menu setOutput={setOutput} />
+                <Menu setOutput={setOutput} isLoading={isLoading} setIsLoading={setIsLoading} />
                 <div className="app-container">
                     <h4>Overview</h4>
                     <p>
-                        This application serves as a practical demonstration of the algorithms outlined in the research paper titled
-                        "Evolution of Algebraic Terms 4: Biological Beam Algorithms" by David M. Clark and Nicholas C. Falco, published
-                        in the International Journal of Algebra and Computation.
+                        Demonstrating "Evolution of Algebraic Terms 4: Biological Beam Algorithms" by David M. Clark and Nicholas C. Falco, as published in the International Journal of Algebra and Computation.
                     </p>
-                    <h4>How to use this program</h4>
+                    <h4>Usage</h4>
                     <p>
-                        To use the application, <b>fill out the form in the left-hand menu and click "Run Algorithm" when ready</b>.
-                        The algorithms output will appear in the panel below.
+                        <b>Fill out the form on the left and click "Run Algorithm"</b> to see results below.
                     </p>
                     <p>
-                        You must select or manually define a groupoid and target term operation. Please note that the web interface has
-                        limitations for solving groupoids larger than 5. To solve groupoids larger than 5, use
-                        the <a href="https://www.github.com/nick-falco/eat">Python command line application</a> from GitHub to run the
-                        algorithm on your local computer.
+                        For groupoids over 5, use the <a href="https://www.github.com/nick-falco/eat">command line version</a> on GitHub.
                     </p>
                     <div className="panel">
-                        <div className="panel-heading">Algorithm Output</div>
+                        <div className="panel-heading">
+                            Algorithm Output
+                        </div>
                         <div className="panel-body output">
+                            {!isLoading && !output && <div>Submit form to see output</div>}
                             {output}
+                            {isLoading && <div className="loading-animation-pulse"></div>}
                         </div>
                     </div>
                 </div>
