@@ -28,10 +28,6 @@ export function GroupoidSelect({ size, setSize, maxSize, squares, setSquares }) 
             { value: [1, 3, 1, 2, 1, 2, 2, 3, 2, 0, 0, 3, 2, 2, 1, 2],
                 name: "1 3 1 2\n1 2 2 3\n2 0 0 3\n2 2 1 2",
                 label: "EAT 3: D1 primal"},
-            // EAT 3 - D6 idemprimal groupoid
-            { value: [3, 0, 0, 3, 2, 2, 1, 0, 3, 0, 2, 0, 2, 0, 1, 3],
-                name: "3 0 0 3\n2 2 1 0\n3 0 2 0\n2 0 1 3",
-                label: "EAT 3: D6 idemprimal"},
         ],
         5: [
             // Pi groupoid
