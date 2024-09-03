@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Groupoid } from './groupoid';
 import { TermOperation } from './termoperation';
+import { GroupoidSelect } from './groupoidSelect';
 
 
 const EAT_BACKEND_API_URL = 'https://eat-backend-api-dvjbaed3bq-uc.a.run.app/runeat';
@@ -14,7 +14,7 @@ export function Menu({ setOutput, isLoading, setIsLoading }) {
     const maxTermOperationSize = Math.pow(numInputValues, 3);
     const [targetOperation, setTargetOperation] = useState(() => Array(maxTermOperationSize).fill(""));
     const maxGroupoidSize = Math.pow(numInputValues, 2);
-    const [groupoidData, setGroupoidData] = useState(() => Array(maxGroupoidSize).fill(""));
+    const [groupoidData, setGroupoidData] = useState(() => Array(maxTermOperationSize).fill(""));
     const [formValid, setFormValid] = useState(false);
     const [abortController, setAbortController] = useState(null);
 
@@ -59,69 +59,68 @@ export function Menu({ setOutput, isLoading, setIsLoading }) {
             }),
             signal: signal,
         })
-        .then(response => {
-            if (!response.ok) {
-                setIsLoading(false);
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.body.getReader();
-        })
-        .then(reader => {
-            let result = '';
-            let total_result = '';
-        
-            const handleChunk = ({ done, value }) => {
-                if (done) {
+            .then(response => {
+                if (!response.ok) {
                     setIsLoading(false);
-                    return;
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-        
-                if (signal.aborted) {
-                    setIsLoading(false);
-                    return; // Early return to stop processing the stream
-                }
-        
-                const chunk = new TextDecoder().decode(value);
-                result += chunk;
-                const lines = result.split('\n');
-        
-                for (let i = 0; i < lines.length - 1; i++) {
-                    const line = lines[i];
-                    console.log(line.trim())
-                    if (line.trim() === '') continue;
-                    if (line.trim() === '#HEARTBEAT#') continue;
-                    total_result += line + '\n';
-                }
-        
-                setOutput(total_result);
-                result = lines[lines.length - 1];
+                return response.body.getReader();
+            })
+            .then(reader => {
+                let result = '';
+                let total_result = '';
+
+                const handleChunk = ({ done, value }) => {
+                    if (done) {
+                        setIsLoading(false);
+                        return;
+                    }
+
+                    if (signal.aborted) {
+                        setIsLoading(false);
+                        return; // Early return to stop processing the stream
+                    }
+
+                    const chunk = new TextDecoder().decode(value);
+                    result += chunk;
+                    const lines = result.split('\n');
+
+                    for (let i = 0; i < lines.length - 1; i++) {
+                        const line = lines[i];
+                        if (line.trim() === '') continue;
+                        if (line.trim() === '#HEARTBEAT#') continue;
+                        total_result += line + '\n';
+                    }
+
+                    setOutput(total_result);
+                    result = lines[lines.length - 1];
+                    return reader.read().then(handleChunk);
+                };
+
                 return reader.read().then(handleChunk);
-            };
-        
-            return reader.read().then(handleChunk);
-        })
-        .catch(error => {
-            if (error.name === 'AbortError') {
-                let countdown = 5;
-                const intervalId = setInterval(() => {
-                  /* We need to wait ~5 seconds before clearing the output since the server may
-                  still be processing the request. There is a max of 5 seconds of latency
-                  before the server will send the #HEARTBEAT# signal to the client, which
-                  will cancel the processing on the server if the client has cancelled. */
-                  setOutput(`Cancelling Request... ${countdown}\n`);
-                  countdown -= 1;
-                  if (countdown < 0) {
-                    clearInterval(intervalId);
-                    setIsLoading(false)
-                    setOutput('');
-                  }
-                }, 1200); // 1.2 seconds. We give a litte extra time to account for latency
-            } else {
-                console.error('Error during AJAX call:', error);
-                setIsLoading(false);
-                setOutput('Error during AJAX call: ' + error.message);
-            }
-        });
+            })
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    let countdown = 5;
+                    const intervalId = setInterval(() => {
+                        /* We need to wait ~5 seconds before clearing the output since the server may
+                        still be processing the request. There is a max of 5 seconds of latency
+                        before the server will send the #HEARTBEAT# signal to the client, which
+                        will cancel the processing on the server if the client has cancelled. */
+                        setOutput(`Canceling Request... ${countdown}\n`);
+                        countdown -= 1;
+                        if (countdown < 0) {
+                            clearInterval(intervalId);
+                            setIsLoading(false)
+                            setOutput('');
+                        }
+                    }, 1200); // 1.2 seconds. We give a litte extra time to account for latency
+                } else {
+                    console.error('Error during AJAX call:', error);
+                    setIsLoading(false);
+                    setOutput('Error during AJAX call: ' + error.message);
+                }
+            });
     };
 
     return (
@@ -134,7 +133,7 @@ export function Menu({ setOutput, isLoading, setIsLoading }) {
                 </div>
                 <div className="panel">
                     <div className="panel-heading">Groupoid</div>
-                    <div className="panel-body"><Groupoid size={size} setSize={setSize} maxSize={maxGroupoidSize} setSquares={setGroupoidData} squares={groupoidData}></Groupoid></div>
+                    <div className="panel-body"><GroupoidSelect size={size} setSize={setSize} maxSize={maxGroupoidSize} setSquares={setGroupoidData} squares={groupoidData}></GroupoidSelect></div>
                 </div>
                 <div className="panel">
                     <div className="panel-heading">Performance Specification</div>

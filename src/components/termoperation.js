@@ -1,10 +1,19 @@
 import { useState, useCallback, useEffect } from 'react';
+import Select, { components } from 'react-select';
+import { customStyles } from './common/reactSelectStyles';
 import { Square, StaticSquare } from './square';
 
 
 export function TermOperation({ size, maxSize, squares, setSquares }) {
 
-	const [target, setTarget] = useState(() => "ternary-discriminator");
+	const defaultOptions = [
+		{value: "ternary-discriminator",
+			label: "Ternary Descriminator"},
+		{value: "manual",
+			label: "Manual"},
+    ];
+
+	const [target, setTarget] = useState(() => defaultOptions[0]);
 
 	useEffect(() => {
 		// Clear the values of the squares array when the size variable changes
@@ -73,9 +82,9 @@ export function TermOperation({ size, maxSize, squares, setSquares }) {
 		Set term operation target
 		*/
 		let target = [];
-		if (targetOperation === "ternary-discriminator") {
+		if (targetOperation.value === "ternary-discriminator") {
 			target = getTernaryDescriminatorTarget();
-		} else if (targetOperation === "manual") {
+		} else if (targetOperation.value === "manual") {
 			squares.fill("");
 		}
 		target.forEach((t, idx) => {
@@ -116,11 +125,15 @@ export function TermOperation({ size, maxSize, squares, setSquares }) {
 	return (
 		<div className="menu-component">
 			<div>
-				<label htmlFor="target-select">Target:</label>
-				<select id="target-select" onChange={(e) => handleSetTarget(e.target.value)}>
-					<option value="ternary-discriminator">Ternary Descriminator</option>
-					<option value="manual">Manual</option>
-				</select>
+				<div>Target:</div>
+                <Select
+                    options={defaultOptions}
+					defaultValue={defaultOptions[0]}
+                    placeholder="Select a Target"
+                    isSearchable={false}
+                    onChange={handleSetTarget}
+                    styles={customStyles}
+                />
 			</div>
 			{rows}
 		</div>

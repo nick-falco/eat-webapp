@@ -313,3 +313,8 @@ select:focus {
   right: -15px; /* Adjust spacing */
   animation-delay: -0.5s; /* Delay for the right circle */
 }
+
+/* react select styles */
+.custom-option {
+  font-family: monospace;
+}

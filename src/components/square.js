@@ -1,6 +1,8 @@
-export function Square({ value, setValue, squareNumber, className = '', size=3 }) {
+export function Square({ value, setValue, squareNumber, className = '', size=3, isEditable=true}) {
 
     const onSquareKeyDown = (event) => {
+        if (!isEditable)
+            return;
         const keyPressed = event.key;
         // Check if the entered value is valid
         if (!isNaN(parseInt(keyPressed)) && parseInt(keyPressed) < size) {
@@ -20,7 +22,7 @@ export function Square({ value, setValue, squareNumber, className = '', size=3 }
     };
 
     return (
-        <input type="text" className={`square ${className}`} value={value} onKeyDown={(e) => onSquareKeyDown(e)} onChange={(e) => onSquareChange(e)}>
+        <input type="text" disabled={!isEditable} className={`square ${className}`} value={value} onKeyDown={(e) => onSquareKeyDown(e)} onChange={(e) => onSquareChange(e)}>
         </input>
     );
 };

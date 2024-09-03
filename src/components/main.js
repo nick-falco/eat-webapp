@@ -10,21 +10,21 @@ export function Main() {
 
     useEffect(() => {
         const handleResize = () => {
-          const appContainer = document.querySelector('.app-container');
-          if (appContainer) {
-            appContainer.scrollTo(0, appContainer.scrollHeight);
-          }
+            const appContainer = document.querySelector('.app-container');
+            if (appContainer) {
+                appContainer.scrollTo(0, appContainer.scrollHeight);
+            }
         };
-    
+
         // Add event listener
         window.addEventListener('resize', handleResize);
-    
+
         // Call handleResize immediately in case the element needs to be scrolled initially
         handleResize();
-    
+
         // Cleanup function
         return () => window.removeEventListener('resize', handleResize);
-      }, [output]); // Empty dependency array means this effect runs once on mount and cleanup on unmount
+    }, [output]); // Empty dependency array means this effect runs once on mount and cleanup on unmount
 
     return (
         <div className="app">
@@ -52,7 +52,7 @@ export function Main() {
                             Algorithm Output
                         </div>
                         <div className="panel-body output">
-                            {!isLoading && !output && <div>Submit form to see output</div>}
+                            {!isLoading && !output && <div>Submit form to see output (Note the exectution times are faster on the command line version)</div>}
                             {output}
                             {isLoading && <div className="loading-animation-pulse"></div>}
                         </div>

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Square, StaticSquare } from './square';
 
 
-export function Groupoid({ size, setSize, maxSize, squares, setSquares}) {
+export function Groupoid({ size, maxSize, squares, setSquares, isEditable=true }) {
 
     useEffect(() => {
         // Clear the values of the squares array when the size variable changes
@@ -41,6 +41,7 @@ export function Groupoid({ size, setSize, maxSize, squares, setSquares}) {
             let squareNumber = rowNumber * size + colIndex;
             cells.push(
                 <Square key={`cell-${squareNumber}`}
+                    isEditable={isEditable}
                     value={squares[squareNumber]}
                     squareNumber={squareNumber}
                     setValue={handleSetSquare}
@@ -61,18 +62,8 @@ export function Groupoid({ size, setSize, maxSize, squares, setSquares}) {
     }
 
     return (
-        <>
-            <div>
-                <label htmlFor="size-select">Size:</label>
-                <select id="size-select" onChange={(e) => setSize(e.target.value)}>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div>
-                {rows}
-            </div>
-        </>
+        <div>
+            {rows}
+        </div>
     );
 }
